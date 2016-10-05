@@ -7,6 +7,11 @@ import (
 	"strconv"
 )
 
+const (
+	ExitCodeOK int = iota
+	ExitCodeError
+)
+
 func main() {
 	os.Exit(Run(os.Args))
 }
@@ -14,16 +19,16 @@ func main() {
 func Run(args []string) int {
 	if len(args) != 2 {
 		fmt.Println("error: 第一引数にstatus codeを")
-		return 1
+		return ExitCodeError
 	}
 	searchWord := args[1]
 	description, err := findStatus(searchWord)
 	if err != nil {
 		fmt.Println("error: " + err.Error())
-		return 1
+		return ExitCodeError
 	}
 	fmt.Println("description: " + description)
-	return 0
+	return ExitCodeOK
 }
 
 func findStatus(searchWord string) (string, error) {
