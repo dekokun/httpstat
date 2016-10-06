@@ -30,10 +30,10 @@ func (c *CLI) Run(args []string) int {
 	searchWord := args[1]
 	description, err := findStatus(searchWord)
 	if err != nil {
-		fmt.Fprintf(c.errStream, "error: "+err.Error())
+		fmt.Fprintf(c.errStream, "error: %s\n", err.Error())
 		return ExitCodeError
 	}
-	fmt.Fprintf(c.outStream, "description: "+description)
+	fmt.Fprintf(c.outStream, "description: %s\n", description)
 	return ExitCodeOK
 }
 
