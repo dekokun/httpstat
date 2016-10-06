@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 )
@@ -12,22 +13,27 @@ const (
 	ExitCodeError
 )
 
-func main() {
-	os.Exit(Run(os.Args))
+type CLI struct {
+	outStream, errStream io.Writer
 }
 
-func Run(args []string) int {
+func main() {
+	cli := &CLI{outStream: os.Stdout, errStream: os.Stderr}
+	os.Exit(cli.Run(os.Args))
+}
+
+func (c *CLI) Run(args []string) int {
 	if len(args) != 2 {
-		fmt.Println("error: 第一引数にstatus codeを")
+		fmt.Fprintf(c.errStream, "error: 第一引数にstatus codeを")
 		return ExitCodeError
 	}
 	searchWord := args[1]
 	description, err := findStatus(searchWord)
 	if err != nil {
-		fmt.Println("error: " + err.Error())
+		fmt.Fprintf(c.errStream, "error: "+err.Error())
 		return ExitCodeError
 	}
-	fmt.Println("description: " + description)
+	fmt.Fprintf(c.outStream, "description: "+description)
 	return ExitCodeOK
 }
 
